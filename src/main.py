@@ -1,4 +1,4 @@
-from flask import Flask, make_response, render_template,request,session,redirect
+from flask import Flask, make_response, render_template, request, session, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
 from flask_login import login_required
@@ -56,11 +56,15 @@ def login():
         else:
             return 'Invalid username/password combination', 400
 
-@login_required
 @app.route("/home")
 def home():
+    return make_response(render_template('home.html'), 200)
+
+@login_required
+@app.route("/order")
+def order():
     food = fetchMenu()
-    return make_response(render_template('home.html',menu = food), 200)
+    return make_response(render_template('order-page.html',menu = food), 200)
 
 @login_required
 @app.route("/place-order",methods =["GET","POST"])
@@ -69,14 +73,19 @@ def placeOrder():
         orders = fetchOrderData(request.form)
         # print()
         for oneOrder in orders:
-            placeorder = Orders(item=oneOrder[0],qty=oneOrder[2],price=(oneOrder[2]*oneOrder[1]))
+            placeorder = Orders(item=oneOrder[1],qty=oneOrder[3],price=(oneOrder[3]*oneOrder[2]))
             db.session.add(placeorder)
             db.session.commit()
-        return str(orders)
+        flash('Order Placed successfully')
+        return make_response(render_template('after-order.html',orderItems=orders), 200)
 
+@app.route("/homeCheck")
+def newHome():
+    return make_response(render_template('after-order.html',orderItems=orders), 200)
 def fetchOrderData(form):
     foodMenu = fetchMenu()
     orderData = []
+    Sno = 1
     # print(form)
     for item in form:
         if form[item] != "":
@@ -85,8 +94,9 @@ def fetchOrderData(form):
             orderItem = foodMenu[index].split(' - ')
             item = orderItem[0]
             price = float(orderItem[1].split(" ")[1])
-            data = [item, price, qty]
+            data = [Sno,item, price, qty]
             orderData.append(data)
+            Sno += 1
     return orderData
 
 def fetchMenu():
