@@ -79,9 +79,21 @@ def placeOrder():
         flash('Order Placed successfully')
         return make_response(render_template('after-order.html',orderItems=orders), 200)
 
-@app.route("/homeCheck")
-def newHome():
-    return make_response(render_template('after-order.html',orderItems=orders), 200)
+@app.route("/analysis")
+def analysis():
+    return make_response(render_template('analysis.html'), 200)
+
+@app.route("/daily-analysis")
+def dailyAnalysis():
+    return make_response(render_template('analysis.html'), 200)
+
+@app.route("/monthly-analysis")
+def monthlyAnalysis():
+    return make_response(render_template('analysis.html'), 200)
+
+@app.route("/weekly-analysis")
+def weeklyAnalysis():
+    return make_response(render_template('analysis.html'), 200)
 def fetchOrderData(form):
     foodMenu = fetchMenu()
     orderData = []
