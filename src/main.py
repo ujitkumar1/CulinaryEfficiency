@@ -1,7 +1,7 @@
 from flask import Flask, make_response, render_template, request, session, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
-from flask_login import login_required
+from flask_login import login_required, UserMixin, LoginManager, login_user
 from datetime import datetime
 
 
@@ -11,8 +11,11 @@ db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'database', '
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['UPLOAD_FOLDER'] = 'static/uploads/'
 db = SQLAlchemy(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
 
-class User(db.Model):
+
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(70))
@@ -33,6 +36,11 @@ class Orders(db.Model):
     price = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
 
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
 @app.route("/")
 def main():
     return make_response(render_template('index.html'), 200)
@@ -49,9 +57,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         print(user)
         if user and user.password == password:
-            session['username'] = username
-            session['user_id'] = user.id
-            print("ok")
+            login_user(user)
             return redirect('/home')# change this
         else:
             return 'Invalid username/password combination', 400
@@ -60,14 +66,14 @@ def login():
 def home():
     return make_response(render_template('home.html'), 200)
 
-@login_required
 @app.route("/order")
+@login_required
 def order():
     food = fetchMenu()
     return make_response(render_template('order-page.html',menu = food), 200)
 
-@login_required
 @app.route("/place-order",methods =["GET","POST"])
+@login_required
 def placeOrder():
     if request.method == "POST":
         orders = fetchOrderData(request.form)
@@ -80,20 +86,25 @@ def placeOrder():
         return make_response(render_template('after-order.html',orderItems=orders), 200)
 
 @app.route("/analysis")
+@login_required
 def analysis():
     return make_response(render_template('analysis.html'), 200)
 
 @app.route("/daily-analysis")
+@login_required
 def dailyAnalysis():
     return make_response(render_template('analysis.html'), 200)
 
 @app.route("/monthly-analysis")
+@login_required
 def monthlyAnalysis():
     return make_response(render_template('analysis.html'), 200)
 
 @app.route("/weekly-analysis")
+@login_required
 def weeklyAnalysis():
     return make_response(render_template('analysis.html'), 200)
+
 def fetchOrderData(form):
     foodMenu = fetchMenu()
     orderData = []
