@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from sqlalchemy import extract
 
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
@@ -130,19 +131,40 @@ def dailyAnalysis():
     ax.xaxis.set_major_locator(mdates.AutoDateLocator())
     fnameDateQty = plotDateGraph(dates, qty, "Date vs Qty")
 
-    items, price, qty = [], [], []
+    dateQty = []
+    datePrice = []
+    for oneData in range(len(dates)):
+        dateQty.append([str(dates[oneData]).split(" ")[0], qty[oneData]])
+        datePrice.append([str(dates[oneData]).split(" ")[0], "Rs. " + str(price[oneData])])
+
+    Dprice, Dqty = {}, {}
     for oneData in range(len(grouped_ordersItemQty)):
-        items.append(grouped_ordersItemQty[oneData][0])
-        qty.append(grouped_ordersItemQty[oneData][1])
+        Dqty[grouped_ordersItemQty[oneData][0]] = grouped_ordersItemQty[oneData][1]
 
     for oneData in range(len(grouped_ordersItemPrice)):
-        price.append(grouped_ordersItemPrice[oneData][1])
+        Dprice[grouped_ordersItemQty[oneData][0]] = grouped_ordersItemPrice[oneData][1]
 
-    fnameItemPrice = plotItemGraph(items, price, "Item vs Price")
-    fnameItemQty = plotItemGraph(items, qty, "Item vs Qty")
+    Dqty = dict(sorted(Dqty.items(), key=lambda x: x[1], reverse=True))
+    Dprice = dict(sorted(Dprice.items(), key=lambda x: x[1], reverse=True))
+
+    fnameItemPrice = plotItemGraph(Dprice.keys(), Dprice.values(), "Item vs Price")
+    fnameItemQty = plotItemGraph(Dqty.keys(), Dqty.values(), "Item vs Qty")
 
     filename = [fnameItemPrice, fnameItemQty, fnameDatePrice, fnameDateQty]
-    return make_response(render_template('analysis-data.html', filename=filename), 200)
+    title = ["Item vs Price", "Item vs Qty", "Date vs Price", "Date vs Qty"]
+
+    itemPrice = []
+    itemQty = []
+
+    for oneData in Dprice.keys():
+        itemPrice.append([oneData, "Rs. " + str(Dprice[oneData])])
+
+    for oneData in Dqty.keys():
+        itemQty.append([oneData, Dqty[oneData]])
+
+    return make_response(
+        render_template('analysis-data.html', filename=filename, title=title, DatePrice=datePrice, DateQty=dateQty,
+                        ItemPriceData=itemPrice, ItemQty=itemQty), 200)
 
 
 @app.route("/monthly-analysis")
@@ -154,14 +176,15 @@ def monthlyAnalysis():
 @app.route("/weekly-analysis")
 @login_required
 def weeklyAnalysis():
-    return make_response(render_template('analysis.html'), 200)
+    grouped_orders = db.session.query(extract('dow', Orders.date), db.func.sum(Orders.qty)).group_by(extract('dow', Orders.date)).all()
+    print(grouped_orders)
+    return str(grouped_orders)
 
 
 def fetchOrderData(form):
     foodMenu = fetchMenu()
     orderData = []
     Sno = 1
-    # print(form)
     for item in form:
         if form[item] != "0":
             index = int(item.split("_")[1])
@@ -184,10 +207,25 @@ def fetchMenu():
 
 
 def plotItemGraph(X, Y, title):
-    plt.figure(figsize=(40, 15))
-    plt.plot(X, Y)
+    plt.figure(figsize=(40, 20))
+    plt.plot(X, Y, marker='o', color="red")
+    ytick = range(int(min(Y)), int(max(Y)), 60)
+
+    label = title.split(" vs ")
+    xlabel = label[0]
+    ylabel = label[1]
+
+    if 'Price' in title:
+        ytick = range(int(min(Y)), int(max(Y)), 300)
+        ylabel += " (Rs.)"
+
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+
+    plt.yticks(ytick)
     plt.title(title)
     plt.xticks(rotation=45, ha='right')
+    plt.grid(True)
     filename = f"{title}-{str(datetime.now().strftime('%B %d, %Y'))}".replace(" ", "")
     plt.savefig(f"./static/graphs/{filename}.png")
     return f"./static/graphs/{filename}.png"
@@ -195,8 +233,24 @@ def plotItemGraph(X, Y, title):
 
 def plotDateGraph(X, Y, title):
     plt.figure(figsize=(10, 5))
-    plt.plot(X, Y)
+    plt.plot(X, Y, marker='o', color="green")
+
+    label = title.split(" vs ")
+    xlabel = label[0]
+    ylabel = label[1]
+
+    if 'Price' in title:
+        ytick = range(int(min(Y)), int(max(Y)), 250)
+        ylabel += " (Rs.)"
+    else:
+        ytick = range(int(min(Y)), int(max(Y)), 10)
+
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+
+    plt.yticks(ytick)
     plt.title(title)
+    plt.grid(True)
     plt.gcf().autofmt_xdate()
     filename = f"{title}-{str(datetime.now().strftime('%B %d, %Y'))}".replace(" ", "")
     plt.savefig(f"./static/graphs/{filename}.png")

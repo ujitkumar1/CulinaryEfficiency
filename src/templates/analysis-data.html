@@ -2,12 +2,94 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Daily analysis</title>
 </head>
 <body>
-<img src={{ filename[0] }} width="2000" height="600">
-<img src={{ filename[1] }} width="2000" height="600">
+<h1> Daily Analysis</h1>
+<u><h4>1. Daily analysis of {{ title[0] }}</h4></u>
+<p>Graph</p>
+<img src={{ filename[0] }} width="2000" height="800">
+<p>Table</p>
+<table border="1px dotted black">
+    <tr>
+        <th>S.No</th>
+        <th>Item</th>
+        <th>Price</th>
+    </tr>
+    {% for item in ItemPriceData %}
+        <tr>
+            <th>{{ loop.index }}</th>
+            <th>{{ item[0] }}</th>
+            <th>{{ item[1] }}</th>
+        </tr>
+    {% endfor %}
+</table>
+<br>
+<hr>
+<br>
+
+<u><h4>2. Daily analysis of {{ title[1] }}</h4></u>
+<p>Graph</p>
+<img src={{ filename[1] }} width="2000" height="800">
+<p>Table</p>
+<table border="1px dotted black">
+    <tr>
+        <th>S.No</th>
+        <th>Item</th>
+        <th>Qty</th>
+    </tr>
+    {% for item in ItemQty %}
+        <tr>
+            <th>{{ loop.index }}</th>
+            <th>{{ item[0] }}</th>
+            <th>{{ item[1] }}</th>
+        </tr>
+    {% endfor %}
+</table>
+<br>
+<hr>
+<br>
+
+<u><h4>3. Daily analysis of {{ title[2] }}</h4></u>
+<p>Graph</p>
 <img src={{ filename[2] }}>
+<p>Table</p>
+<table border="1px dotted black">
+    <tr>
+        <th>S.No</th>
+        <th>Date</th>
+        <th>Price</th>
+    </tr>
+    {% for item in DatePrice %}
+        <tr>
+            <th>{{ loop.index }}</th>
+            <th>{{ item[0] }}</th>
+            <th>{{ item[1] }}</th>
+        </tr>
+    {% endfor %}
+</table>
+<br>
+<hr>
+<br>
+
+<u><h4>4. Daily analysis of {{ title[3] }}</h4></u>
+<p>Graph</p>
 <img src={{ filename[3] }}>
+<p>Table</p>
+<table border="1px dotted black">
+    <tr>
+        <th>S.No</th>
+        <th>Date</th>
+        <th>Qty.</th>
+    </tr>
+    {% for item in DateQty %}
+        <tr>
+            <th>{{ loop.index }}</th>
+            <th>{{ item[0] }}</th>
+            <th>{{ item[1] }}</th>
+        </tr>
+    {% endfor %}
+</table>
+
 </body>
 </html>
