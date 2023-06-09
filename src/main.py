@@ -4,6 +4,8 @@ from datetime import datetime
 from flask import Flask, make_response, render_template, request, redirect, flash
 from flask_login import login_required, UserMixin, LoginManager, login_user
 from flask_sqlalchemy import SQLAlchemy
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 app = Flask(__name__)
 app.secret_key = "IITMBS21"
@@ -36,7 +38,7 @@ class Orders(db.Model):
     item = db.Column(db.String(70), nullable=False)
     qty = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Integer, nullable=False)
-    date = db.Column(db.DateTime, default=datetime.utcnow)
+    date = db.Column(db.String(20), default=datetime.now().strftime("%B %d, %Y"))
 
 
 @login_manager.user_loader
@@ -102,7 +104,47 @@ def analysis():
 @app.route("/daily-analysis")
 @login_required
 def dailyAnalysis():
-    return make_response(render_template('analysis.html'), 200)
+
+    grouped_ordersDateQty = db.session.query(Orders.date, db.func.sum(Orders.qty)).group_by(Orders.date).all()
+    grouped_ordersDatePrice = db.session.query(Orders.date, db.func.sum(Orders.price)).group_by(Orders.date).all()
+    grouped_ordersItemQty = db.session.query(Orders.item, db.func.sum(Orders.qty)).group_by(Orders.item).all()
+    grouped_ordersItemPrice = db.session.query(Orders.item, db.func.sum(Orders.price)).group_by(Orders.item).all()
+
+    dates, price, qty = [], [], []
+    for oneData in range(len(grouped_ordersDateQty)):
+        date_str = grouped_ordersDateQty[oneData][0]
+        date_obj = datetime.strptime(date_str, "%B %d, %Y")
+        dates.append(date_obj)
+        price.append(grouped_ordersDatePrice[oneData][1])
+        qty.append(grouped_ordersDateQty[oneData][1])
+
+    sorted_data = sorted(zip(dates, price, qty), key=lambda x: x[0])
+    dates, price, qty = zip(*sorted_data)
+
+    fig, ax = plt.subplots()
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%B %d, %Y"))
+    ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+
+    fnameDatePrice = plotDateGraph(dates,price,"Date vs Price")
+    fig, ax = plt.subplots()
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%B %d, %Y"))
+    ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+    fnameDateQty= plotDateGraph(dates, qty, "Date vs Qty")
+
+
+    items, price, qty = [], [], []
+    for oneData in range(len(grouped_ordersItemQty)):
+        items.append(grouped_ordersItemQty[oneData][0])
+        qty.append(grouped_ordersItemQty[oneData][1])
+
+    for oneData in range(len(grouped_ordersItemPrice)):
+        price.append(grouped_ordersItemPrice[oneData][1])
+
+    fnameItemPrice= plotItemGraph(items, price, "Item vs Price")
+    fnameItemQty= plotItemGraph(items, qty, "Item vs Qty")
+
+    filename = [fnameItemPrice,fnameItemQty,fnameDatePrice,fnameDateQty]
+    return make_response(render_template('analysis-data.html',filename=filename), 200)
 
 
 @app.route("/monthly-analysis")
@@ -142,6 +184,23 @@ def fetchMenu():
         menuDict[i.id] = i.name + " - Rs. " + str(i.price)
     return (menuDict)
 
+def plotItemGraph(X,Y,title):
+    plt.figure(figsize=(40, 15))
+    plt.plot(X, Y)
+    plt.title(title)
+    plt.xticks(rotation=45, ha='right')
+    filename = f"{title}-{str(datetime.now().strftime('%B %d, %Y'))}".replace(" ","")
+    plt.savefig(f"./static/graphs/{filename}.png")
+    return f"./static/graphs/{filename}.png"
+
+def plotDateGraph(X,Y,title):
+    plt.figure(figsize=(10,5))
+    plt.plot(X, Y)
+    plt.title(title)
+    plt.gcf().autofmt_xdate()
+    filename = f"{title}-{str(datetime.now().strftime('%B %d, %Y'))}".replace(" ","")
+    plt.savefig(f"./static/graphs/{filename}.png")
+    return f"./static/graphs/{filename}.png"
 
 if __name__ == "__main__":
     with app.app_context():
