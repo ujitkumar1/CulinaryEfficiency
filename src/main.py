@@ -57,21 +57,21 @@ def login():
         return make_response(render_template('login.html'), 200)
 
     elif request.method == "POST":
-        print("ok")
         username = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
-        print(user)
         if user and user.password == password:
             login_user(user)
             return redirect('/home')
         else:
             return 'Invalid username/password combination', 400
 
+
 @app.route("/logout")
 def logout():
     logout_user()
     return redirect('/login')
+
 
 @app.route("/home")
 def home():
@@ -93,7 +93,7 @@ def placeOrder():
         new_id = last_id + 1 if last_id is not None else 1
         orders = fetchOrderData(request.form)
         for oneOrder in orders:
-            placeorder = Orders(id=new_id,item=oneOrder[1], qty=oneOrder[3], price=(oneOrder[3] * oneOrder[2]))
+            placeorder = Orders(id=new_id, item=oneOrder[1], qty=oneOrder[3], price=(oneOrder[3] * oneOrder[2]))
             db.session.add(placeorder)
             db.session.commit()
         flash('Order Placed successfully')
