@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from sqlalchemy import extract
+from sqlalchemy import func
 
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
@@ -163,23 +163,63 @@ def dailyAnalysis():
         itemQty.append([oneData, Dqty[oneData]])
 
     return make_response(
-        render_template('analysis-data.html', filename=filename, title=title, DatePrice=datePrice, DateQty=dateQty,
+        render_template('analysis-daily.html', filename=filename, title=title, DatePrice=datePrice, DateQty=dateQty,
                         ItemPriceData=itemPrice, ItemQty=itemQty), 200)
-
-
-@app.route("/monthly-analysis")
-@login_required
-def monthlyAnalysis():
-    return make_response(render_template('analysis.html'), 200)
 
 
 @app.route("/weekly-analysis")
 @login_required
 def weeklyAnalysis():
-    grouped_orders = db.session.query(extract('dow', Orders.date), db.func.sum(Orders.qty)).group_by(extract('dow', Orders.date)).all()
-    print(grouped_orders)
-    return str(grouped_orders)
+    orders = db.session.query(Orders).all()
 
+    grouped_qty = {}
+    grouped_price = {}
+
+    for order in orders:
+        date_obj = datetime.strptime(order.date, "%B %d, %Y")
+        day_of_week = date_obj.weekday()
+
+        if day_of_week in grouped_qty:
+            grouped_qty[day_of_week] += order.qty
+            grouped_price[day_of_week] += order.price
+        else:
+            grouped_qty[day_of_week] = order.qty
+            grouped_price[day_of_week] = order.price
+
+    sorted_qty = sorted(grouped_qty.items())
+    sorted_price = sorted(grouped_price.items())
+
+    days_of_week, quantities = zip(*sorted_qty)
+    _, prices = zip(*sorted_price)
+    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+    fig, ax1 = plt.subplots(figsize=(8, 5))
+    ax1.bar(days_of_week, prices, color = "#FF8C00")
+    ax1.set_title("Days of Week vs Price")
+    ax1.set_xlabel("Days of Week")
+    ax1.set_ylabel("Price (Rs.)")
+    filename_price = str(datetime.now().strftime('%B %d, %Y')).replace(" ", "") + "_price.png"
+    plt.savefig(f"./static/graphs/{filename_price}", bbox_inches='tight')
+    plt.close()
+
+    fig, ax2 = plt.subplots(figsize=(8, 5))
+    ax2.bar(days_of_week, quantities, color = "#FF1493")
+    ax2.set_title("Days of Week vs Qty")
+    ax2.set_xlabel("Days of Week")
+    ax2.set_ylabel("Quantity")
+    filename_qty = str(datetime.now().strftime('%B %d, %Y')).replace(" ", "") + "_qty.png"
+    plt.savefig(f"./static/graphs/{filename_qty}", bbox_inches='tight')
+    plt.close()
+
+    title = ["Days of Week vs Qty","Days of Week vs Price"]
+    filename = [f"./static/graphs/{filename_qty}", f"./static/graphs/{filename_price}"]
+
+    weekQty, weekSales = [], []
+    for oneData in range(len(days_of_week)):
+        weekQty.append([days_of_week[oneData],quantities[oneData]])
+        weekSales.append([days_of_week[oneData],prices[oneData]])
+
+    return make_response(render_template('analysis-weekly.html', filename=filename,title = title,weekQty=weekQty,weekSales=weekSales), 200)
 
 def fetchOrderData(form):
     foodMenu = fetchMenu()

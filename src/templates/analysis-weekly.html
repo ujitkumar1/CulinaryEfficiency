@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weekly analysis</title>
+</head>
+<body>
+
+<h1> Weekly Analysis</h1>
+<u><h4>1. Week analysis of {{ title[0] }}</h4></u>
+<p>Graph</p>
+<img src={{ filename[0] }} >
+<p>Table</p>
+<table border="1px dotted black">
+    <tr>
+        <th>S.No</th>
+        <th>Day of Week</th>
+        <th>Qty</th>
+    </tr>
+    {% for item in weekQty %}
+        <tr>
+            <th>{{ loop.index }}</th>
+            <th>{{ item[0] }}</th>
+            <th>{{ item[1] }}</th>
+        </tr>
+    {% endfor %}
+</table>
+<br>
+<hr>
+<br>
+
+
+<u><h4>2. Week analysis of {{ title[1] }}</h4></u>
+<p>Graph</p>
+<img src={{ filename[1] }} >
+<p>Table</p>
+<table border="1px dotted black">
+    <tr>
+        <th>S.No</th>
+        <th>Day of Week</th>
+        <th>Revenue</th>
+    </tr>
+    {% for item in weekSales %}
+        <tr>
+            <th>{{ loop.index }}</th>
+            <th>{{ item[0] }}</th>
+            <th>Rs. {{ item[1] }}</th>
+        </tr>
+    {% endfor %}
+</table>
+<br>
+
+<a href="{{ url_for('home') }}">Go to Dashboard</a>
+</body>
+</html>
