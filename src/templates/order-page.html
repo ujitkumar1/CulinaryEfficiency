@@ -7,15 +7,18 @@
     <script src="script.js"></script>
 </head>
 <body>
-    <form action="/place-order" method="POST">
-        <label><h3>Select the Items from Menu:</h3></label>
-        {% for item in menu.keys() %}
-            <input type="checkbox" name="{{ item }}" value="{{ menu[item] }}">
-            <input type="number" name="qty_{{ item }}">
-            <label for="{{ item }}" name="value">{{ menu[item] }}</label><br>
-        {% endfor %}
-        <br>
-        <button type="submit">Place the Order</button>
-    </form>
+<form action="/place-order" method="POST">
+    <label><h3>Select the Items from Menu:</h3></label>
+    {% set index = 1 %}
+    {% for item in menu.keys() %}
+        {{ loop.index }}
+        {{ ".  " }}
+        <input type="number" name="qty_{{ item }}" value="0">
+        <label for="{{ item }}" name="value">{{ menu[item] }}</label><br>
+        {% set index = index + 1 %}
+    {% endfor %}
+    <br>
+    <button type="submit">Place the Order</button>
+</form>
 </body>
 </html>

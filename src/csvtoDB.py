@@ -2,12 +2,12 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 # CSV file path
-csv_file = '../database/foodItem.csv'
+csv_file = '../database/data.csv'
 # SQLite database file path
 db_file = '../database/database.sqlite3'
 
 # Table name in the SQLite database
-table_name = 'menu'
+table_name = 'order'
 
 # Load the CSV data into a Pandas DataFrame
 df = pd.read_csv(csv_file)

@@ -5,23 +5,23 @@
     <title>Title</title>
 </head>
 <body>
-  <H3>Order Bill</H3>
-  <table border="1px dotted black">
+<H3>Order Bill</H3>
+<table border="1px dotted black">
     <tr>
-      <th>S.No</th>
-      <th>Item</th>
-      <th>Qty.</th>
-      <th>Price</th>
+        <th>S.No</th>
+        <th>Item</th>
+        <th>Qty.</th>
+        <th>Price</th>
     </tr>
     {% for item in orderItems %}
-    <tr>
-      <th>{{item[0]}}</th>
-      <th>{{item[1]}}</th>
-      <th>{{item[3]}}</th>
-      <th>Rs. {{item[2]*item[3]}}</th>
-    </tr>
+        <tr>
+            <th>{{ item[0] }}</th>
+            <th>{{ item[1] }}</th>
+            <th>{{ item[3] }}</th>
+            <th>Rs. {{ item[2]*item[3] }}</th>
+        </tr>
     {% endfor %}
-  </table>
+</table>
 
 <br>
 <a href="{{ url_for('home') }}">Go to Dashboard</a>
