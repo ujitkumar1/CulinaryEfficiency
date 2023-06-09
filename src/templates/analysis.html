@@ -3,12 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>Sales Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F8F8F8;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #CC3333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+       a {
+    display: block;
+    margin: 0 auto;
+    width: 200px;
+    padding: 10px;
+    background-color: #CC3333;
+    color: #FFFFFF;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+
+
+        a:hover {
+            background-color: #992222;
+        }
+    </style>
 </head>
 <body>
 <h1>Sales Analysis</h1><br>
 
-<p>Select from the below to get an Insight of the sales</p>
+<p>Select from the options below to get insight into the sales:</p>
 <a href="{{ url_for('dailyAnalysis') }}">Daily Analysis</a><br>
-<a href="{{ url_for('weeklyAnalysis') }}">Weekly Analysis</a><br>
+<a href="{{ url_for('weeklyAnalysis') }}">Weekly Analysis</a>
 </body>
 </html>

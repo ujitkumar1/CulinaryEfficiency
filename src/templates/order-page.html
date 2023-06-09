@@ -2,23 +2,148 @@
 <html>
 <head>
     <title>Restaurant Dashboard</title>
-    <!-- Add your CSS stylesheets and JavaScript files here -->
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js"></script>
+    <style>
+        body {
+            background-color: #F8F8F8;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h3 {
+            color: #CC3333;
+            margin-bottom: 10px;
+        }
+
+        .menu-table {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .menu-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .menu-table th,
+        .menu-table td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .menu-table th {
+            background-color: #CC3333;
+            color: #FFFFFF;
+        }
+
+        .menu-table tbody tr:nth-child(even) {
+            background-color: #F8F8F8;
+        }
+
+        .menu-table tbody tr:hover {
+            background-color: #EAEAEA;
+        }
+
+        .menu-table .quantity-btn {
+            padding: 5px 10px;
+            background-color: #CC3333;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 5px;
+            margin-left: 5px;
+        }
+
+        .menu-table .quantity-btn:hover {
+            background-color: #992222;
+        }
+
+        .submit-btn {
+            background-color: #CC3333;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background-color: #992222;
+        }
+        .menu-table .remove-btn {
+            padding: 5px 10px;
+            background-color: #999999;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-table .remove-btn:hover {
+            background-color: #777777;
+        }
+    </style>
 </head>
 <body>
 <form action="/place-order" method="POST">
-    <label><h3>Select the Items from Menu:</h3></label>
-    {% set index = 1 %}
-    {% for item in menu.keys() %}
-        {{ loop.index }}
-        {{ ".  " }}
-        <input type="number" name="qty_{{ item }}" value="0">
-        <label for="{{ item }}" name="value">{{ menu[item] }}</label><br>
-        {% set index = index + 1 %}
-    {% endfor %}
-    <br>
-    <button type="submit">Place the Order</button>
+    <h3>Select the Items from Menu:</h3>
+    <div class="menu-table">
+        <table>
+            <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in menu.keys() %}
+            <tr>
+                <td><b>{{ menu[item] }}</b></td>
+                <td>
+                    <button class="quantity-btn" type="button" onclick="incrementQuantity('{{ item }}')">+</button>
+                    <span id="{{ item }}_qty">0</span>
+                    <input type="hidden" name="qty_{{ item }}" id="{{ item }}_input" value="0">
+                    <button class="remove-btn" type="button" onclick="decrementQuantity('{{ item }}')">-</button>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <button type="submit" class="submit-btn">Place the Order</button>
+
+    <script>
+        function incrementQuantity(item) {
+            var qtyElement = document.getElementById(item + '_qty');
+            var qtyInput = document.getElementById(item + '_input');
+            var quantity = parseInt(qtyElement.innerText) || 0;
+            quantity++;
+            qtyElement.innerText = quantity;
+            qtyInput.value = quantity;
+        }
+
+        function decrementQuantity(item) {
+            var qtyElement = document.getElementById(item + '_qty');
+            var qtyInput = document.getElementById(item + '_input');
+            var quantity = parseInt(qtyElement.innerText) || 0;
+            if (quantity > 0) {
+                quantity--;
+                qtyElement.innerText = quantity;
+                qtyInput.value = quantity;
+            }
+        }
+    </script>
 </form>
 </body>
 </html>

@@ -2,28 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Order Placed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F8F8F8;
+            margin: 0;
+            padding: 0;
+        }
+
+        h3 {
+            color: #CC3333;
+            margin-bottom: 10px;
+        }
+
+        .table-container {
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #CCCCCC;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #CCCCCC;
+        }
+
+        th {
+            background-color: #CC3333;
+            color: #FFFFFF;
+        }
+
+        tr:nth-child(even) {
+            background-color: #F8F8F8;
+        }
+
+        .dashboard-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #CC3333;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .dashboard-btn:hover {
+            background-color: #992222;
+        }
+    </style>
 </head>
 <body>
-<H3>Order Bill</H3>
-<table border="1px dotted black">
-    <tr>
-        <th>S.No</th>
-        <th>Item</th>
-        <th>Qty.</th>
-        <th>Price</th>
-    </tr>
-    {% for item in orderItems %}
-        <tr>
-            <th>{{ item[0] }}</th>
-            <th>{{ item[1] }}</th>
-            <th>{{ item[3] }}</th>
-            <th>Rs. {{ item[2]*item[3] }}</th>
-        </tr>
-    {% endfor %}
-</table>
+<h3>Order Bill</h3>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Item</th>
+                <th>Qty.</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in orderItems %}
+            <tr>
+                <td>{{ item[0] }}</td>
+                <td>{{ item[1] }}</td>
+                <td>{{ item[3] }}</td>
+                <td>Rs. {{ item[2]*item[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-<br>
-<a href="{{ url_for('home') }}">Go to Dashboard</a>
+<button class="dashboard-btn" onclick="window.location.href='{{ url_for('home') }}'">Go to Dashboard</button>
 </body>
 </html>

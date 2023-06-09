@@ -1,15 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Welcome to the Blogging Platform</title>
-    <!--    <link rel="stylesheet" href="{{ url_for('static', filename="CSS/style.css") }}">-->
+    <title>Tea Traffic</title>
+    <style>
+        body {
+            background-color: #F8F8F8;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #CC3333;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        nav {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            background-color: #CC3333;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        a:hover {
+            background-color: #992222;
+        }
+    </style>
 </head>
 <body>
-<h1>Welcome to the Blogging Platform</h1>
-<nav>
-    <a href="{{ url_for('order') }}">Click to Place an Order</a>
-    <br>
-    <a href="{{ url_for('analysis') }}">Click to Analysis</a>
-</nav>
+    <h1>Welcome to Tea Traffic</h1>
+    <nav>
+        <a href="{{ url_for('order') }}">Click to Place an Order</a>
+        <br>
+        <a href="{{ url_for('analysis') }}">Click to Analysis</a>
+    </nav>
 </body>
 </html>
