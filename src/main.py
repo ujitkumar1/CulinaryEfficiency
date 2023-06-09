@@ -1,6 +1,5 @@
 import os
 from datetime import datetime
-from sqlalchemy import func
 
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
@@ -194,7 +193,7 @@ def weeklyAnalysis():
     days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
     fig, ax1 = plt.subplots(figsize=(8, 5))
-    ax1.bar(days_of_week, prices, color = "#FF8C00")
+    ax1.bar(days_of_week, prices, color="#FF8C00")
     ax1.set_title("Days of Week vs Price")
     ax1.set_xlabel("Days of Week")
     ax1.set_ylabel("Price (Rs.)")
@@ -203,7 +202,7 @@ def weeklyAnalysis():
     plt.close()
 
     fig, ax2 = plt.subplots(figsize=(8, 5))
-    ax2.bar(days_of_week, quantities, color = "#FF1493")
+    ax2.bar(days_of_week, quantities, color="#FF1493")
     ax2.set_title("Days of Week vs Qty")
     ax2.set_xlabel("Days of Week")
     ax2.set_ylabel("Quantity")
@@ -211,15 +210,18 @@ def weeklyAnalysis():
     plt.savefig(f"./static/graphs/{filename_qty}", bbox_inches='tight')
     plt.close()
 
-    title = ["Days of Week vs Qty","Days of Week vs Price"]
+    title = ["Days of Week vs Qty", "Days of Week vs Price"]
     filename = [f"./static/graphs/{filename_qty}", f"./static/graphs/{filename_price}"]
 
     weekQty, weekSales = [], []
     for oneData in range(len(days_of_week)):
-        weekQty.append([days_of_week[oneData],quantities[oneData]])
-        weekSales.append([days_of_week[oneData],prices[oneData]])
+        weekQty.append([days_of_week[oneData], quantities[oneData]])
+        weekSales.append([days_of_week[oneData], prices[oneData]])
 
-    return make_response(render_template('analysis-weekly.html', filename=filename,title = title,weekQty=weekQty,weekSales=weekSales), 200)
+    return make_response(
+        render_template('analysis-weekly.html', filename=filename, title=title, weekQty=weekQty, weekSales=weekSales),
+        200)
+
 
 def fetchOrderData(form):
     foodMenu = fetchMenu()

@@ -80,6 +80,7 @@
         .submit-btn:hover {
             background-color: #992222;
         }
+
         .menu-table .remove-btn {
             padding: 5px 10px;
             background-color: #999999;
@@ -108,15 +109,15 @@
             </thead>
             <tbody>
             {% for item in menu.keys() %}
-            <tr>
-                <td><b>{{ menu[item] }}</b></td>
-                <td>
-                    <button class="quantity-btn" type="button" onclick="incrementQuantity('{{ item }}')">+</button>
-                    <span id="{{ item }}_qty">0</span>
-                    <input type="hidden" name="qty_{{ item }}" id="{{ item }}_input" value="0">
-                    <button class="remove-btn" type="button" onclick="decrementQuantity('{{ item }}')">-</button>
-                </td>
-            </tr>
+                <tr>
+                    <td><b>{{ menu[item] }}</b></td>
+                    <td>
+                        <button class="quantity-btn" type="button" onclick="incrementQuantity('{{ item }}')">+</button>
+                        <span id="{{ item }}_qty">0</span>
+                        <input type="hidden" name="qty_{{ item }}" id="{{ item }}_input" value="0">
+                        <button class="remove-btn" type="button" onclick="decrementQuantity('{{ item }}')">-</button>
+                    </td>
+                </tr>
             {% endfor %}
             </tbody>
         </table>

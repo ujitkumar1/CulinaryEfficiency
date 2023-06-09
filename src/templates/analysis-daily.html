@@ -9,6 +9,7 @@
             background-color: #F8F8F8;
             padding: 20px;
         }
+
         h1 {
             color: #CC3333;
             text-align: center;
@@ -90,11 +91,11 @@
             <th>Price</th>
         </tr>
         {% for item in ItemPriceData %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ item[0] }}</td>
-            <td>{{ item[1] }}</td>
-        </tr>
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item[0] }}</td>
+                <td>{{ item[1] }}</td>
+            </tr>
         {% endfor %}
     </table>
 </div>
@@ -114,11 +115,11 @@
             <th>Qty</th>
         </tr>
         {% for item in ItemQty %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ item[0] }}</td>
-            <td>{{ item[1] }}</td>
-        </tr>
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item[0] }}</td>
+                <td>{{ item[1] }}</td>
+            </tr>
         {% endfor %}
     </table>
 </div>
@@ -138,11 +139,11 @@
             <th>Price</th>
         </tr>
         {% for item in DatePrice %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ item[0] }}</td>
-            <td>{{ item[1] }}</td>
-        </tr>
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item[0] }}</td>
+                <td>{{ item[1] }}</td>
+            </tr>
         {% endfor %}
     </table>
 </div>
@@ -162,11 +163,11 @@
             <th>Qty.</th>
         </tr>
         {% for item in DateQty %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ item[0] }}</td>
-            <td>{{ item[1] }}</td>
-        </tr>
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item[0] }}</td>
+                <td>{{ item[1] }}</td>
+            </tr>
         {% endfor %}
     </table>
 </div>
