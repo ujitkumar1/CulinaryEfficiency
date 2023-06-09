@@ -94,9 +94,33 @@
         .menu-table .remove-btn:hover {
             background-color: #777777;
         }
+
+        .logout-btn{
+            display: block;
+            margin: 20px;
+            padding: 10px 20px;
+            background-color: #00FF00;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            text-align: right;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .logout-btn:hover {
+            background-color:  #006400;
+        }
     </style>
 </head>
 <body>
+<header>
+    <button class="logout-btn" onclick="window.location.href='{{ url_for('logout') }}'">logout</button>
+</header>
 <form action="/place-order" method="POST">
     <h3>Select the Items from Menu:</h3>
     <div class="menu-table">

@@ -4,7 +4,7 @@ from datetime import datetime, date
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 from flask import Flask, make_response, render_template, request, redirect, flash
-from flask_login import login_required, UserMixin, LoginManager, login_user
+from flask_login import login_required, UserMixin, LoginManager, login_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -64,10 +64,14 @@ def login():
         print(user)
         if user and user.password == password:
             login_user(user)
-            return redirect('/home')  # change this
+            return redirect('/home')
         else:
             return 'Invalid username/password combination', 400
 
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect('/login')
 
 @app.route("/home")
 def home():
@@ -85,10 +89,11 @@ def order():
 @login_required
 def placeOrder():
     if request.method == "POST":
+        last_id = Orders.query.order_by(Orders.id.desc()).first().id
+        new_id = last_id + 1 if last_id is not None else 1
         orders = fetchOrderData(request.form)
-        # print()
         for oneOrder in orders:
-            placeorder = Orders(item=oneOrder[1], qty=oneOrder[3], price=(oneOrder[3] * oneOrder[2]))
+            placeorder = Orders(id=new_id,item=oneOrder[1], qty=oneOrder[3], price=(oneOrder[3] * oneOrder[2]))
             db.session.add(placeorder)
             db.session.commit()
         flash('Order Placed successfully')
@@ -222,6 +227,7 @@ def weeklyAnalysis():
         render_template('analysis-weekly.html', filename=filename, title=title, weekQty=weekQty, weekSales=weekSales),
         200)
 
+
 @app.route("/todays-analysis")
 def todayAnalysis():
     today = date.today().strftime("%B %d, %Y")
@@ -262,7 +268,7 @@ def todayAnalysis():
     fnameItemQty = plotItemGraph(Dqty.keys(), Dqty.values(), "Item vs Qty")
 
     filename = [fnameItemPrice, fnameItemQty]
-    title = ["Item vs Price", "Item vs Qty","Price Table","Qty. Table"]
+    title = ["Item vs Price", "Item vs Qty", "Price Table", "Qty. Table"]
 
     itemPrice = []
     itemQty = []
@@ -275,7 +281,7 @@ def todayAnalysis():
 
     return make_response(
         render_template('analysis-today.html', filename=filename, title=title, DatePrice=datePrice, DateQty=dateQty,
-                        ItemPriceData=itemPrice, ItemQty=itemQty, date =str(datetime.now().strftime('%B %d, %Y'))), 200)
+                        ItemPriceData=itemPrice, ItemQty=itemQty, date=str(datetime.now().strftime('%B %d, %Y'))), 200)
 
 
 def fetchOrderData(form):
