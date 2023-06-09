@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Today's Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F8F8F8;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #CC3333;
+            text-align: center;
+        }
+
+        h3 {
+            color: #CC3333;
+            text-align: left;
+        }
+
+        h4 {
+            color: black;
+            margin-bottom: 10px;
+            text-decoration: underline;
+        }
+
+        p {
+            margin: 0;
+            padding-top: 10px;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+            padding: 10px;
+        }
+
+        .table-container {
+            max-width: 800px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border: 1px dotted black;
+        }
+
+        th {
+            background-color: #CC3333;
+            color: #FFFFFF;
+        }
+
+        a.button {
+            display: block;
+            width: 200px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #CC3333;
+            color: #FFFFFF;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>Today's Analysis ({{ date }})</h1>
+<u><h3>1. Today's analysis of {{ title[0] }}</h3></u>
+<h4>Graph</h4>
+<img src="{{ filename[0] }}" alt="{{ title[0] }} Graph">
+<h4>Table</h4>
+<div class="table-container">
+    <table>
+        <tr>
+            <th>S.No</th>
+            <th>Item</th>
+            <th>Price</th>
+        </tr>
+        {% for item in ItemPriceData %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item[0] }}</td>
+                <td>{{ item[1] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<br>
+<hr>
+<br>
+
+<u><h3>2. Today's analysis of {{ title[1] }}</h3></u>
+<h4>Graph</h4>
+<img src="{{ filename[1] }}" alt="{{ title[1] }} Graph">
+<h4>Table</h4>
+<div class="table-container">
+    <table>
+        <tr>
+            <th>S.No</th>
+            <th>Item</th>
+            <th>Qty</th>
+        </tr>
+        {% for item in ItemQty %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item[0] }}</td>
+                <td>{{ item[1] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<br>
+<hr>
+<br>
+
+<u><h3>3. {{ title[2] }}</h3></u>
+<h4>Table</h4>
+<div class="table-container">
+    <table>
+        <tr>
+            <th>S.No</th>
+            <th>Date</th>
+            <th>Price</th>
+        </tr>
+        {% for item in DatePrice %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item[0] }}</td>
+                <td>{{ item[1] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<br>
+<hr>
+<br>
+
+<u><h3>4. {{ title[3] }}</h3></u>
+<h4>Table</h4>
+<div class="table-container">
+    <table>
+        <tr>
+            <th>S.No</th>
+            <th>Date</th>
+            <th>Qty.</th>
+        </tr>
+        {% for item in DateQty %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item[0] }}</td>
+                <td>{{ item[1] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<br>
+
+<a href="{{ url_for('home') }}" class="button">Go to Dashboard</a>
+</body>
+</html>
