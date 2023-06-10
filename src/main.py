@@ -151,8 +151,8 @@ def dailyAnalysis():
     Dqty = dict(sorted(Dqty.items(), key=lambda x: x[1], reverse=True))
     Dprice = dict(sorted(Dprice.items(), key=lambda x: x[1], reverse=True))
 
-    fnameItemPrice = plotItemGraph(Dprice.keys(), Dprice.values(), "Item vs Price")
-    fnameItemQty = plotItemGraph(Dqty.keys(), Dqty.values(), "Item vs Qty")
+    fnameItemPrice = plotItemGraph(Dprice.keys(), Dprice.values(), "Item vs Price", size=True)
+    fnameItemQty = plotItemGraph(Dqty.keys(), Dqty.values(), "Item vs Qty", size=True)
 
     filename = [fnameItemPrice, fnameItemQty, fnameDatePrice, fnameDateQty]
     title = ["Item vs Price", "Item vs Qty", "Date vs Price", "Date vs Qty"]
@@ -264,8 +264,8 @@ def todayAnalysis():
     Dqty = dict(sorted(Dqty.items(), key=lambda x: x[1], reverse=True))
     Dprice = dict(sorted(Dprice.items(), key=lambda x: x[1], reverse=True))
 
-    fnameItemPrice = plotItemGraph(Dprice.keys(), Dprice.values(), "Item vs Price")
-    fnameItemQty = plotItemGraph(Dqty.keys(), Dqty.values(), "Item vs Qty")
+    fnameItemPrice = plotItemGraph(Dprice.keys(), Dprice.values(), "Item vs Price", size=False)
+    fnameItemQty = plotItemGraph(Dqty.keys(), Dqty.values(), "Item vs Qty", size=False)
 
     filename = [fnameItemPrice, fnameItemQty]
     title = ["Item vs Price", "Item vs Qty", "Price Table", "Qty. Table"]
@@ -309,26 +309,31 @@ def fetchMenu():
     return (menuDict)
 
 
-def plotItemGraph(X, Y, title):
-    plt.figure(figsize=(40, 20))
-    plt.plot(X, Y, marker='o', color="red")
-    ytick = range(int(min(Y)), int(max(Y)), 60)
+def plotItemGraph(X, Y, title, size):
+    if size == False:
+        fig, ax = plt.subplots()  # Create a new figure and axes for each graph
+        ax.plot(X, Y, marker='o', color="gold")
+    else:
+        fig, ax = plt.subplots(figsize=(40, 20))  # Set the desired width and height of the figure
+        ax.plot(X, Y, marker='o', color="gold")
+        ytick = range(int(min(Y)), int(max(Y)), 300)
+        ax.set_yticks(list(ytick))
 
     label = title.split(" vs ")
     xlabel = label[0]
     ylabel = label[1]
 
-    if 'Price' in title:
-        ytick = range(int(min(Y)), int(max(Y)), 300)
+    if 'Price' in title and size:
         ylabel += " (Rs.)"
 
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
 
-    plt.yticks(ytick)
-    plt.title(title)
-    plt.xticks(rotation=45, ha='right')
-    plt.grid(True)
+    ax.set_title(title)
+    ax.set_xticklabels(X, rotation=45, ha='right')  # Corrected method name
+
+    ax.grid(True)
+
     filename = f"{title}-{str(datetime.now().strftime('%B %d, %Y'))}".replace(" ", "")
     plt.savefig(f"./static/graphs/{filename}.png")
     return f"./static/graphs/{filename}.png"
