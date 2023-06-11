@@ -57,11 +57,14 @@ class todayAnalysis(Resource):
         itemPrice = []
         itemQty = []
 
+        sumSalesPrice = sum(Dprice.values())
         for oneData in Dprice.keys():
-            itemPrice.append([oneData, "Rs. " + str(Dprice[oneData])])
+            itemPrice.append(
+                [oneData, "Rs. " + str(Dprice[oneData]), str(round((Dprice[oneData] / sumSalesPrice) * 100, 3)) + " %"])
 
+        sumSalesQty = sum(Dqty.values())
         for oneData in Dqty.keys():
-            itemQty.append([oneData, Dqty[oneData]])
+            itemQty.append([oneData, Dqty[oneData], str(round((Dqty[oneData] / sumSalesQty) * 100, 3)) + " %"])
 
         return make_response(
             render_template('analysis-today.html', filename=filename, title=title, DatePrice=datePrice, DateQty=dateQty,

@@ -110,3 +110,14 @@ class Help:
         static_url = url_for('static', filename='')
         url = f"{static_url}graphs/{filename}"
         return url
+
+    @staticmethod
+    def clean():
+        static_folder = app.static_folder
+        folder_path = os.path.join(static_folder, 'graphs')
+        files = os.listdir(folder_path)
+
+        for file in files:
+            file_path = os.path.join(folder_path, file)
+            if os.path.isfile(file_path):
+                os.remove(file_path)

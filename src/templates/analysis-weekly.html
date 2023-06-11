@@ -109,12 +109,14 @@
             <th>S.No</th>
             <th>Day of Week</th>
             <th>Qty</th>
+            <th>% of Contribution</th>
         </tr>
         {% for item in weekQty %}
             <tr>
                 <td>{{ loop.index }}</td>
                 <td>{{ item[0] }}</td>
                 <td>{{ item[1] }}</td>
+                <td>{{ item[2] }}</td>
             </tr>
         {% endfor %}
     </table>
@@ -133,12 +135,14 @@
             <th>S.No</th>
             <th>Day of Week</th>
             <th>Revenue</th>
+            <th>% of Contribution</th>
         </tr>
         {% for item in weekSales %}
             <tr>
                 <td>{{ loop.index }}</td>
                 <td>{{ item[0] }}</td>
                 <td>Rs. {{ item[1] }}</td>
+                <td>{{ item[2] }}</td>
             </tr>
         {% endfor %}
     </table>

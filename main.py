@@ -1,6 +1,7 @@
 from src import app, db, api
 from src.analysis import Analysis
 from src.dailyanalysis import dailyAnalysis
+from src.helperFunctions import Help
 from src.home import Home
 from src.index import Index
 from src.login import Login
@@ -24,4 +25,5 @@ api.add_resource(Logout, "/logout")
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
+    Help.clean()
     app.run(debug=True)

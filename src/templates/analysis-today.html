@@ -113,12 +113,14 @@
             <th>S.No</th>
             <th>Item</th>
             <th>Price</th>
+            <th>% of Contribution</th>
         </tr>
         {% for item in ItemPriceData %}
             <tr>
                 <td>{{ loop.index }}</td>
                 <td>{{ item[0] }}</td>
                 <td>{{ item[1] }}</td>
+                <td>{{ item[2] }}</td>
             </tr>
         {% endfor %}
     </table>
@@ -137,12 +139,14 @@
             <th>S.No</th>
             <th>Item</th>
             <th>Qty</th>
+            <th>% of Contribution</th>
         </tr>
         {% for item in ItemQty %}
             <tr>
                 <td>{{ loop.index }}</td>
                 <td>{{ item[0] }}</td>
                 <td>{{ item[1] }}</td>
+                <td>{{ item[2] }}</td>
             </tr>
         {% endfor %}
     </table>

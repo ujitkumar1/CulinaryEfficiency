@@ -80,10 +80,15 @@ class weeklyAnalysis(Resource):
         title = ["Days of Week vs Qty", "Days of Week vs Price"]
         filename = [url1, url2]
 
+        sumQty = sum(quantities)
+        sumPrice = sum(prices)
+
         weekQty, weekSales = [], []
         for oneData in range(len(days_of_week)):
-            weekQty.append([days_of_week[oneData], quantities[oneData]])
-            weekSales.append([days_of_week[oneData], prices[oneData]])
+            weekQty.append([days_of_week[oneData], quantities[oneData],
+                            str(round((quantities[oneData] / sumQty) * 100, 3)) + " %"])
+            weekSales.append(
+                [days_of_week[oneData], prices[oneData], str(round((prices[oneData] / sumPrice) * 100, 3)) + " %"])
 
         return make_response(
             render_template('analysis-weekly.html', filename=filename, title=title, weekQty=weekQty,
