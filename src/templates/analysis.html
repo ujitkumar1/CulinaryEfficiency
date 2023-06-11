@@ -33,7 +33,6 @@
             font-weight: bold;
         }
 
-
         a:hover {
             background-color: #992222;
         }
@@ -58,6 +57,24 @@
         .logout-btn:hover {
             background-color: #006400;
         }
+
+        .dashboard-link {
+            display: block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #CC3333;
+            color: #FFFFFF;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            text-align: center;
+        }
+
+        .dashboard-link:hover {
+            background-color: #992222;
+        }
     </style>
 </head>
 <body>
@@ -67,8 +84,10 @@
 <h1>Sales Analysis</h1><br>
 
 <p>Select from the options below to get insight into the sales:</p>
-<a href="{{ url_for('todayAnalysis') }}">Today's Analysis</a><br>
-<a href="{{ url_for('dailyAnalysis') }}">Daily Analysis</a><br>
-<a href="{{ url_for('weeklyAnalysis') }}">Weekly Analysis</a>
+<a href="{{ url_for('todayanalysis') }}">Today's Analysis</a><br>
+<a href="{{ url_for('dailyanalysis') }}">Daily Analysis</a><br>
+<a href="{{ url_for('weeklyanalysis') }}">Weekly Analysis</a><br>
+
+<a href="{{ url_for('home') }}" class="dashboard-link">Go to Dashboard</a>
 </body>
 </html>
